@@ -13,23 +13,23 @@ from bs4 import BeautifulSoup
 ## PART 1 (100 points) - Get the HTML data from http://www.nytimes.com (the New York Times home page) and save it in a file called nytimes_data.html.
 
 ## Write the Python code to do so here.
-cache = "nytimes_data.html"
+#infile = "nytimes_data.html"
 try:
-	f = open(cache, 'r')
-	text_data_from_site = f.read()
-	f.close()
+	f = open("nytimes_data.html", 'r')
+	nytimes_data = f.read
+	#f.close()
+	print("\nUSING CACHE\n")
 except:
-	r = requests.get("http://www.nytimes.com")
-	text_data_from_site = r.text
-	f = open(cache, 'w')
-	f.write(text_data_from_site)
-	f.close()
+	nytimes_data = requests.get("http://www.nytimes.com").text
+	f = open("nytimes_data.html", 'w', encoding="utf-8")
+	f.write(nytimes_data)
+	#f.close()
+	print("\nFETCHING\n")
 
 #####################
 
 ## PART 2 (200 points)
 ## Write code to get the first 10 headlines from the New York Times, based on the data you saved in the file in Part 1, and save those strings in a list called nytimes_headlines. 
-print(cache)
 
 ## Note that you will almost certainly need to do some investigation on the http://nytimes.com website to do this correctly, even after saving the file in Part 1.
 
@@ -51,7 +51,15 @@ print(cache)
 ## HINT: Remember that you'll need to open the file you created in Part 1, read the contets into one big string, and make a BeautifulSoup object out of that string!
 ## NOTE that the provided link does not include saving the online data in a file as part of the process. But it still provides very useful hints/tricks about how to look for and identify the headlines on the NY Times page.
 
+headlines = []
+soup = BeautifulSoup(nytimes_data, 'html.parser')
+for heading in soup.find_all(class_= "story-heading"):
+	if heading.a:
+		headlines.append(heading.a.text.replace("\n", " ").strip())
+	else:
+		headlines.append((heading.contents[0].strip()))
 
+nytimes_headlines = headlines[0:10]
 
 
 #####################
