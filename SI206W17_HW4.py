@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 ## SI 206 - W17 - HW4
 ## COMMENT WITH:
-## Your section day/time:
+## Your section day/time: Thursday, 6pm
 ## Any names of people you worked with on this assignment:
 
 #####################
@@ -13,14 +13,23 @@ from bs4 import BeautifulSoup
 ## PART 1 (100 points) - Get the HTML data from http://www.nytimes.com (the New York Times home page) and save it in a file called nytimes_data.html.
 
 ## Write the Python code to do so here.
-
-
-
+cache = "nytimes_data.html"
+try:
+	f = open(cache, 'r')
+	text_data_from_site = f.read()
+	f.close()
+except:
+	r = requests.get("http://www.nytimes.com")
+	text_data_from_site = r.text
+	f = open(cache, 'w')
+	f.write(text_data_from_site)
+	f.close()
 
 #####################
 
 ## PART 2 (200 points)
 ## Write code to get the first 10 headlines from the New York Times, based on the data you saved in the file in Part 1, and save those strings in a list called nytimes_headlines. 
+print(cache)
 
 ## Note that you will almost certainly need to do some investigation on the http://nytimes.com website to do this correctly, even after saving the file in Part 1.
 
