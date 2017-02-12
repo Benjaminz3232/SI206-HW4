@@ -5,11 +5,10 @@ from bs4 import BeautifulSoup
 
 ## SI 206 - W17 - HW4
 ## COMMENT WITH:
-## Your section day/time: Thursday, 6pm
+## Your section day/time: Thursday, 6-7pm
 ## Any names of people you worked with on this assignment:
 
-#####################
-
+#####################################################
 ## PART 1 (100 points) - Get the HTML data from http://www.nytimes.com (the New York Times home page) and save it in a file called nytimes_data.html.
 
 ## Write the Python code to do so here.
@@ -17,17 +16,16 @@ from bs4 import BeautifulSoup
 try:
 	f = open("nytimes_data.html", 'r')
 	nytimes_data = f.read
-	#f.close()
+	f.close()
 	print("\nUSING CACHE\n")
 except:
 	nytimes_data = requests.get("http://www.nytimes.com").text
 	f = open("nytimes_data.html", 'w', encoding="utf-8")
 	f.write(nytimes_data)
-	#f.close()
+	f.close()
 	print("\nFETCHING\n")
 
-#####################
-
+#####################################################
 ## PART 2 (200 points)
 ## Write code to get the first 10 headlines from the New York Times, based on the data you saved in the file in Part 1, and save those strings in a list called nytimes_headlines. 
 
@@ -51,19 +49,23 @@ except:
 ## HINT: Remember that you'll need to open the file you created in Part 1, read the contets into one big string, and make a BeautifulSoup object out of that string!
 ## NOTE that the provided link does not include saving the online data in a file as part of the process. But it still provides very useful hints/tricks about how to look for and identify the headlines on the NY Times page.
 
-headlines = []
-soup = BeautifulSoup(nytimes_data, 'html.parser')
-for heading in soup.find_all(class_= "story-heading"):
-	if heading.a:
-		headlines.append(heading.a.text.replace("\n", " ").strip())
-	else:
-		headlines.append((heading.contents[0].strip()))
+nytimes_headlines = []
 
-nytimes_headlines = headlines[0:10]
+fileref = open("nytimes_data.html", 'r', encoding = 'utf-8')
+fileref_string = fileref.read()
+soup = BeautifulSoup(fileref_string, "lxml")
 
+count = 0
 
-#####################
+for story_heading in soup.find_all(class_="story-heading"): 
+    if story_heading.a:
+    	print(story_heading.a.text)
+    	nytimes_headlines.append(story_heading.a.text)
+    	count += 1
+    if count > 9:
+    	break
 
+#####################################################
 ## PART 3 (200 points)
 
 ## Go to this URL: https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All
@@ -93,11 +95,11 @@ umsi_titles = {}
 ## Find the container that holds the title that belongs to that person (HINT: a class name)
 ## Grab the text of each of those elements and put them in the dictionary umsi_titles properly
 
-
-
-
-
-
+for i in people:
+	names = i.find("div", {"property":"dc:title"}) #property is unique
+	titles = i.find("div", {"class":"field-name-field-person-titles"}) 
+	
+	umsi_titles[names.text] = titles.text
 
 
 
